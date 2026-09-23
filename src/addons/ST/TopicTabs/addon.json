@@ -1,0 +1,13 @@
+{
+    "title": "ST: Topic Tabs",
+    "description": "XenForo 2.3 için avatar destekli sekmeli konu widget'i.",
+    "version_id": 1000030,
+    "version_string": "1.0.0",
+    "dev": "st-webguvenligi",
+    "dev_url": "https://github.com/st-webguvenligi/xf_topics",
+    "support_url": "https://github.com/st-webguvenligi/xf_topics/issues",
+    "require": {
+        "XF": [2030000, "XenForo 2.3.0 veya üzeri"]
+    },
+    "icon": "fa-comments"
+}
