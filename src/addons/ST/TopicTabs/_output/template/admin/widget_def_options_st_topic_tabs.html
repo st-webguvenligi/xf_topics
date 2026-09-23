@@ -1,0 +1,25 @@
+<xf:title>{{ phrase('widget_def.st_topic_tabs') }}</xf:title>
+
+<xf:formrow label="Duyurular forum ID'leri">
+    <xf:textbox name="options[announcement_forums]" value="{$options.announcement_forums}" hint="Virgül veya boşluk ile ayırın; örnek: 3,8,12" />
+</xf:formrow>
+
+<xf:formrow label="Son Konular forum ID'leri">
+    <xf:textbox name="options[latest_forums]" value="{$options.latest_forums}" hint="Boş bırakılırsa tüm erişilebilir forumlar kullanılır." />
+</xf:formrow>
+
+<xf:formrow label="Popüler Konular forum ID'leri">
+    <xf:textbox name="options[popular_forums]" value="{$options.popular_forums}" />
+</xf:formrow>
+
+<xf:formrow label="Makale Paylaşımları forum ID'leri">
+    <xf:textbox name="options[article_forums]" value="{$options.article_forums}" />
+</xf:formrow>
+
+<xf:formrow label="Konu sayısı">
+    <xf:numberbox name="options[limit]" value="{$options.limit|default(5)}" min="1" max="50" />
+</xf:formrow>
+
+<xf:formrow label="Popülerlik dönemi (gün)">
+    <xf:numberbox name="options[popular_days]" value="{$options.popular_days|default(30)}" min="1" max="3650" />
+</xf:formrow>
