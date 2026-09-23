@@ -1,0 +1,72 @@
+<div class="block st-topic-tabs-widget">
+    <div class="block-outer">
+        <div class="block-outer-opposite">
+            <ul class="tabs tabs--standalone" role="tablist">
+                <xf:foreach loop="$tabs" key="$tabId" value="$tab">
+                    <li class="tabs-tab" role="presentation">
+                        <a href="#st-topic-tab-{$tabId}-{$widget.id}" role="tab" aria-controls="st-topic-tab-{$tabId}-{$widget.id}">{$tab.title}</a>
+                    </li>
+                </xf:foreach>
+            </ul>
+        </div>
+    </div>
+
+    <div class="block-container">
+        <xf:foreach loop="$tabs" key="$tabId" value="$tab">
+            <div id="st-topic-tab-{$tabId}-{$widget.id}" class="st-topic-tabs-panel" role="tabpanel">
+                <xf:if is="$tab.threads is not empty">
+                    <div class="st-topic-tabs-list">
+                        <xf:foreach loop="$tab.threads" value="$thread">
+                            <div class="st-topic-tabs-item">
+                                <xf:avatar user="$thread.LastPoster" size="s" />
+                                <div class="st-topic-tabs-content">
+                                    <a class="st-topic-tabs-title" href="{{ link('threads', $thread) }}">{$thread.title}</a>
+                                    <div class="st-topic-tabs-meta">
+                                        <xf:if is="$thread.LastPoster">
+                                            {$thread.LastPoster.username}
+                                        <xf:else />
+                                            {{ phrase('guest') }}
+                                        </xf:if>
+                                        <span aria-hidden="true"> · </span>
+                                        <xf:date time="$thread.last_post_date" />
+                                    </div>
+                                </div>
+                            </div>
+                        </xf:foreach>
+                    </div>
+                <xf:else />
+                    <div class="block-row">{{ phrase('no_results_found') }}</div>
+                </xf:if>
+            </div>
+        </xf:foreach>
+    </div>
+</div>
+
+<xf:css>
+.st-topic-tabs-widget .tabs--standalone { margin-bottom: 0; overflow-x: auto; }
+.st-topic-tabs-widget .tabs-tab { white-space: nowrap; }
+.st-topic-tabs-panel { display: none; padding: 6px 0; }
+.st-topic-tabs-panel:first-of-type { display: block; }
+.st-topic-tabs-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-bottom: 1px solid @xf-borderColor; }
+.st-topic-tabs-item:last-child { border-bottom: 0; }
+.st-topic-tabs-item .avatar { flex: 0 0 auto; }
+.st-topic-tabs-content { min-width: 0; }
+.st-topic-tabs-title { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.st-topic-tabs-meta { color: @xf-textColorMuted; font-size: 12px; margin-top: 2px; }
+</xf:css>
+
+<xf:js>
+!function($, window, document) {
+    $('.st-topic-tabs-widget').each(function() {
+        var $widget = $(this), $tabs = $widget.find('.tabs-tab'), $panels = $widget.find('.st-topic-tabs-panel');
+        $tabs.first().addClass('is-active');
+        $tabs.on('click', 'a', function(e) {
+            e.preventDefault();
+            var target = $(this).attr('href');
+            $tabs.removeClass('is-active');
+            $(this).parent().addClass('is-active');
+            $panels.hide().filter(target).show();
+        });
+    });
+}(jQuery, window, document);
+</xf:js>

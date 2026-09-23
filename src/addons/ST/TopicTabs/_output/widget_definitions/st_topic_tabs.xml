@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<widget_definitions>
+    <widget_definition addon_id="ST/TopicTabs" widget_id="st_topic_tabs" class="ST\TopicTabs\Widget\TopicTabs" render_order="10">
+        <admin_phrase>ST Topic Tabs</admin_phrase>
+        <description>Tabbed topic lists with the last responder avatar.</description>
+    </widget_definition>
+</widget_definitions>
