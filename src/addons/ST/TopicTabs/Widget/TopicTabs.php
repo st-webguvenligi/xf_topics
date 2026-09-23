@@ -3,7 +3,6 @@
 namespace ST\TopicTabs\Widget;
 
 use XF\Widget\AbstractWidget;
-use XF\Widget\WidgetRenderer;
 
 class TopicTabs extends AbstractWidget
 {
@@ -34,7 +33,7 @@ class TopicTabs extends AbstractWidget
                 'title' => 'Popüler Konular',
                 'forums' => $this->parseForumIds($options['popular_forums']),
                 'order' => ['view_count', 'DESC'],
-                'since' => (time() - ((int) $options['popular_days'] * 86400))
+                'since' => time() - ((int) $options['popular_days'] * 86400)
             ],
             'articles' => [
                 'title' => 'Makale Paylaşımları',
@@ -43,7 +42,7 @@ class TopicTabs extends AbstractWidget
             ]
         ];
 
-        foreach ($tabs as $tabId => &$tab)
+        foreach ($tabs as &$tab)
         {
             $finder = \XF::finder('XF:Thread')
                 ->with('LastPoster')
@@ -65,9 +64,7 @@ class TopicTabs extends AbstractWidget
         }
         unset($tab);
 
-        return $this->renderer('st_topic_tabs_widget', [
-            'tabs' => $tabs
-        ]);
+        return $this->renderer('st_topic_tabs_widget', ['tabs' => $tabs]);
     }
 
     protected function parseForumIds($value)
@@ -77,51 +74,9 @@ class TopicTabs extends AbstractWidget
             return [];
         }
 
-        $ids = array_map('intval', preg_split('/[,\s]+/', (string) $value, -1, PREG_SPLIT_NO_EMPTY));
+        $ids = preg_split('/[,\s]+/', (string) $value, -1, PREG_SPLIT_NO_EMPTY);
+        $ids = array_map('intval', $ids);
+
         return array_values(array_unique(array_filter($ids)));
-    }
-
-    public function verifyOptions(array &$options, \XF\Admin\Controller\AbstractWidget $controller)
-    {
-        foreach (['announcement_forums', 'latest_forums', 'popular_forums', 'article_forums'] as $key)
-        {
-            if (!isset($options[$key]))
-            {
-                $options[$key] = '';
-            }
-        }
-
-        $options['limit'] = max(1, min(50, (int) ($options['limit'] ?? 5)));
-        $options['popular_days'] = max(1, min(3650, (int) ($options['popular_days'] ?? 30)));
-
-        return true;
-    }
-
-    public function renderOptions(\XF\Admin\Controller\AbstractWidget $controller, \XF\Entity\Widget $widget)
-    {
-        return $controller->formRow(
-            $controller->formTextBox($widget->options['announcement_forums'] ?? '', 'options[announcement_forums]'),
-            ['label' => 'Duyurular forum ID\'leri']
-        )
-        . $controller->formRow(
-            $controller->formTextBox($widget->options['latest_forums'] ?? '', 'options[latest_forums]'),
-            ['label' => 'Son Konular forum ID\'leri']
-        )
-        . $controller->formRow(
-            $controller->formTextBox($widget->options['popular_forums'] ?? '', 'options[popular_forums]'),
-            ['label' => 'Popüler Konular forum ID\'leri']
-        )
-        . $controller->formRow(
-            $controller->formTextBox($widget->options['article_forums'] ?? '', 'options[article_forums]'),
-            ['label' => 'Makale Paylaşımları forum ID\'leri']
-        )
-        . $controller->formRow(
-            $controller->formNumberBox($widget->options['limit'] ?? 5, 'options[limit]', ['min' => 1, 'max' => 50]),
-            ['label' => 'Konu sayısı']
-        )
-        . $controller->formRow(
-            $controller->formNumberBox($widget->options['popular_days'] ?? 30, 'options[popular_days]', ['min' => 1, 'max' => 3650]),
-            ['label' => 'Popülerlik dönemi (gün)']
-        );
     }
 }
